@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "npx eslint src --ext .js,.jsx"
+    "lint": "npx eslint src --ext .js,.jsx",
+    "serve": "echo serve"
   },
   "eslintConfig": {
     "extends": [
