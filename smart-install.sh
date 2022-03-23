@@ -1,30 +1,31 @@
 #!/usr/bin/env bash
 
-changedFiles="$(git diff --name-only HEAD@{1} HEAD)"
+changedFiles="$(git diff --name-only)"
 
 checkForChangedFiles() {
     if [ -d node_modules ]; then
-        echo "$changedFiles" | grep -E --quiet "package(-lock)*\.json" && eval packageJsonHasChanged
-        exitFromTask 1
+        echo "node modules folder detected."
+        if [ $(echo "$changedFiles" | grep -E --quiet "package(-lock)*\.json") ]; then
+            echo "Changes to package.json detected, updates need to be installed"
+            exitFromTask 0
+        else 
+            echo "no Changes to package.json found, updates dont't need to be installed"
+            exitFromTask 1
+        fi
     else
+        echo "node modules not found, updates need to be installed"
         exitFromTask 0
     fi
     
 }
 
-packageJsonHasChanged() {
-    echo "Changes to package.json detected, installing updates"
-    exitFromTask 0
-}
-
 exitFromTask() {
-    echo $1
     if [ $1 == 0 ]; then
-        echo -n "true" | tee test
+    echo -n "true" | tee test
     else
-        echo -n "false" | tee test
+    echo -n "false" | tee test
     fi
-
+    
     exit 0;
 }
 
