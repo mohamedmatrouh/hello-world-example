@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-changedFiles="$(git diff --name-only)"
-
 checkForChangedFiles() {
     if [ -d node_modules ]; then
         echo "node modules folder detected."
-        if [ $(echo "$changedFiles" | grep -E --quiet "package(-lock)*\.json") ]; then
-            echo "Changes to package.json detected, updates need to be installed"
-            exitFromTask 0
-        else 
+        
+        changedFiles=$(git log --pretty=oneline -1 --name-only | grep -E "package(-lock)*\.json")
+        echo "changedFiles ==> $changedFiles"
+        if [ -z $changedFiles ]; then
             echo "no Changes to package.json found, updates dont't need to be installed"
             exitFromTask 1
+        else 
+            echo "Changes to package.json detected, updates need to be installed"
+            exitFromTask 0
         fi
     else
         echo "node modules not found, updates need to be installed"
